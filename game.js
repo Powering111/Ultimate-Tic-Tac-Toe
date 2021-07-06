@@ -1,6 +1,9 @@
 var canvas,context;
 var mouseX,mouseY;
 var grid=new Array(9);
+var gridsize=60;
+var gridoffset=3;
+var now_selected;
 function startGame(){
   canvas = document.getElementById("game");
   context = canvas.getContext("2d");
@@ -9,33 +12,41 @@ function startGame(){
   for(let i=0;i<9;i++){
     grid[i]=new Array(9);
     for(let j=0;j<9;j++){
-      grid[i][j]=new component(i*60+5,j*60+5,50,50,"red","blue");
+      grid[i][j]=new component(i-1,j-1,i*gridsize+gridoffset,j*gridsize+gridoffset,gridsize-2*gridoffset,gridsize-2*gridoffset,"red","blue");
     }
   }
   var interval=setInterval(updateCanvas,20);
 
 }
 function mouseMoved(e){
-  mouseX=e.pageX;
-  mouseY=e.pageY; //todo
+  let cRect= canvas.getBoundingClientRect();
+  mouseX=Math.round(e.clientX-cRect.left);
+  mouseY=Math.round(e.clientY-cRect.top); //todo
+
+  document.getElementById("mousePosition").innerHTML=mouseX+", "+mouseY;
 }
-function component(x,y,width,height,color,color_hover){
+function component(x,y,left,top,width,height,color,color_hover){
   this.x=x;
   this.y=y;
+  this.left=left;
+  this.top=top;
   this.width=width;
   this.height=height;
   this.color=color;
   this.color_hover=color_hover;
   this.update=function(){
-    if(this.x<=mouseX&&this.x+this.width>=mouseX&&this.y<=mouseY&&this.y+this.height>=mouseY){
+    if(this.left-gridoffset<=mouseX&&this.left+this.width+gridoffset>=mouseX&&this.top-gridoffset<=mouseY&&this.top+this.height+gridoffset>=mouseY){
       context.fillStyle=color_hover;
+      now_selected=this;
     }else{
       context.fillStyle=color;
     }
-    context.fillRect(this.x,this.y,this.width,this.height);
+    context.fillRect(this.left,this.top,this.width,this.height);
   }
 }
-
+function clicked(e){
+  alert(now_selected.x+","now_selected.y);
+}
 function updateCanvas(){
   context.clearRect(0,0,canvas.width,canvas.height);
   context.fillStyle="#99FF99";
