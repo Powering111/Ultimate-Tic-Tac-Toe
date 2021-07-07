@@ -1,40 +1,51 @@
-var canvas,context;
-var mouseX,mouseY;
-var grid=new Array(9);
-var gridsize=60;
-var gridoffset=3;
-var now_selected;
+var gameState={
+  canvas:null,
+  context:null,
+  player:1,
+  possiblegrid:0,
+  now_hovered:null,
+  gridsize:60,
+  gridoffset:3,
+  grid:new Array(9),
+  mouseX:0,mouseY:0,
+  color:"white",
+  color_hover:"#555555",
+  color_p1:"red",
+  color_p2:"blue",
+  color_disabled:"black"
+};
 function startGame(){
-  canvas = document.getElementById("game");
-  context = canvas.getContext("2d");
+  gameState.canvas = document.getElementById("game");
+  gameState.context = gameState.canvas.getContext("2d");
 
 
   for(let i=0;i<9;i++){
-    grid[i]=new Array(9);
+    gameState.grid[i]=new Array(9);
     for(let j=0;j<9;j++){
-      grid[i][j]=new group(i,j,(i*3*gridsize),(j*3*gridsize));
+      gameState.grid[i][j]=new group(i,j,(i*3*gameState.gridsize),(j*3*gameState.gridsize));
     }
   }
   var interval=setInterval(updateCanvas,20);
 
 }
 function mouseMoved(e){
-  let cRect= canvas.getBoundingClientRect();
-  mouseX=Math.round(e.clientX-cRect.left);
-  mouseY=Math.round(e.clientY-cRect.top); //todo
+  let cRect= gameState.canvas.getBoundingClientRect();
+  gameState.mouseX=Math.round(e.clientX-cRect.left);
+  gameState.mouseY=Math.round(e.clientY-cRect.top); //todo
 
-  document.getElementById("mousePosition").innerHTML=mouseX+", "+mouseY;
+  document.getElementById("mousePosition").innerHTML=gameState.mouseX+", "+gameState.mouseY;
 }
 function group(x,y,left,top){
   this.x=x;
   this.y=y;
   this.left=left;
   this.top=top;
+  this.full=false;
   this.can=new Array(3);
   for(let i=0;i<3;i++){
     this.can[i]=new Array(3);
     for(let j=0;j<3;j++){
-      this.can[i][j]=new component(i+1,j+1,this.left+i*gridsize+gridoffset,this.top+j*gridsize+gridoffset,gridsize-2*gridoffset,gridsize-2*gridoffset,"red","blue");
+      this.can[i][j]=new component(this,i+1,j+1,this.left+i*gameState.gridsize+gameState.gridoffset,this.top+j*gameState.gridsize+gameState.gridoffset,gameState.gridsize-2*gameState.gridoffset,gameState.gridsize-2*gameState.gridoffset);
     }
   }
   this.update=function(){
@@ -44,38 +55,104 @@ function group(x,y,left,top){
       }
     }
   }
+  this.setEnabled=function(){
+    for(let i=0;i<3;i++){
+      for(let j=0;j<3;j++){
+        this.can[i][j].setEnabled();
+      }
+    }
+  }
+  this.setDisabled=function(){
+    for(let i=0;i<3;i++){
+      for(let j=0;j<3;j++){
+        this.can[i][j].setDisabled();
+      }
+    }
+  }
 }
-function component(x,y,left,top,width,height,color,color_hover){
+function to_scalar(x,y){
+  return x+(y-1)*3;
+}
+function setpossiblegrid(x,y){
+  if(!gameState.grid[x-1][y-1].full){
+    gameState.possiblegrid={x:x,y:y};
+  }else{
+    gameState.possiblegrid=0;
+  }
+
+  for(let i=0;i<3;i++){
+    for(let j=0;j<3;j++){
+      if(gameState.possiblegrid!=0&&(gameState.possiblegrid.x-1!=i || gameState.possiblegrid.y-1!=j))
+        gameState.grid[i][j].setDisabled();
+      else {
+        gameState.grid[i][j].setEnabled();
+      }
+    }
+  }
+}
+function component(parent,x,y,left,top,width,height){
+  this.parent=parent;
   this.x=x;
   this.y=y;
   this.left=left;
   this.top=top;
   this.width=width;
   this.height=height;
-  this.color=color;
-  this.color_hover=color_hover;
+  this.state=0;
   this.update=function(){
-    if(this.left-gridoffset<=mouseX&&this.left+this.width+gridoffset>=mouseX&&this.top-gridoffset<=mouseY&&this.top+this.height+gridoffset>=mouseY){
-      context.fillStyle=color_hover;
-      now_selected=this;
-    }else{
-      context.fillStyle=color;
+    if(this.state==1){
+      gameState.context.fillStyle=gameState.color_p1;
     }
-    context.fillRect(this.left,this.top,this.width,this.height);
+    else if(this.state==2){
+      gameState.context.fillStyle=gameState.color_p2;
+    }
+    else if(this.state==3){
+      gameState.context.fillStyle=gameState.color_disabled;
+    }
+    else if(this.left-gameState.gridoffset<=gameState.mouseX&&this.left+this.width+gameState.gridoffset>gameState.mouseX&&this.top-gameState.gridoffset<=gameState.mouseY&&this.top+this.height+gameState.gridoffset>gameState.mouseY){
+      gameState.context.fillStyle=gameState.color_hover;
+      gameState.now_hovered=this;
+    }else{
+      gameState.context.fillStyle=gameState.color;
+    }
+    gameState.context.fillRect(this.left,this.top,this.width,this.height);
+  }
+  this.click=function(){
+    if(this.state==0){
+      this.state=gameState.player;
+      change_player();
+      setpossiblegrid(this.x,this.y);
+    }
+  }
+  this.setEnabled=function(){
+    if(this.state==3)
+    this.state=0;
+  }
+  this.setDisabled=function(){
+    if(this.state==0)
+      this.state=3;
   }
 }
+function change_player(){
+  if(gameState.player==1){
+    gameState.player=2;
+  }else if(gameState.player==2){
+    gameState.player=1;
+  }
+  document.getElementById("player").innerHTML="Player "+gameState.player;
+}
 function clicked(e){
-  alert(now_selected.x+","+now_selected.y);
+  gameState.now_hovered.click();
 }
 function updateCanvas(){
-  context.clearRect(0,0,canvas.width,canvas.height);
-  context.fillStyle="#99FF99";
-  context.fillRect(0,0,540,540);
-  context.fillStyle="#0000FF";
+  gameState.context.clearRect(0,0,gameState.canvas.width,gameState.canvas.height);
+  gameState.context.fillStyle="#99FF99";
+  gameState.context.fillRect(0,0,540,540);
+  gameState.context.fillStyle="#0000FF";
 
   for(let i=0;i<3;i++){
     for(let j=0;j<3;j++){
-      grid[i][j].update();
+      gameState.grid[i][j].update();
     }
   }
 
