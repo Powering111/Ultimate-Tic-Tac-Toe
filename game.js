@@ -6,13 +6,15 @@ var gameState={
   now_hovered:null,
   gridsize:60,
   gridoffset:3,
+  groupoffset:5,
   grid:new Array(9),
   mouseX:0,mouseY:0,
+  color_bg:"#99FF99",
   color:"white",
-  color_hover:"#555555",
+  color_hover:"#FFFF00",
   color_p1:"red",
   color_p2:"blue",
-  color_disabled:"black"
+  color_disabled:"#333333"
 };
 function startGame(){
   gameState.canvas = document.getElementById("game");
@@ -22,7 +24,7 @@ function startGame(){
   for(let i=0;i<9;i++){
     gameState.grid[i]=new Array(9);
     for(let j=0;j<9;j++){
-      gameState.grid[i][j]=new group(i,j,(i*3*gameState.gridsize),(j*3*gameState.gridsize));
+      gameState.grid[i][j]=new group(i,j,i*(3*gameState.gridsize+gameState.groupoffset),j*(3*gameState.gridsize+gameState.groupoffset));
     }
   }
   var interval=setInterval(updateCanvas,20);
@@ -40,7 +42,7 @@ function group(x,y,left,top){
   this.y=y;
   this.left=left;
   this.top=top;
-  this.full=false;
+  this.active=9;
   this.can=new Array(3);
   for(let i=0;i<3;i++){
     this.can[i]=new Array(3);
@@ -70,11 +72,8 @@ function group(x,y,left,top){
     }
   }
 }
-function to_scalar(x,y){
-  return x+(y-1)*3;
-}
 function setpossiblegrid(x,y){
-  if(!gameState.grid[x-1][y-1].full){
+  if(gameState.grid[x-1][y-1].active!=0){
     gameState.possiblegrid={x:x,y:y};
   }else{
     gameState.possiblegrid=0;
@@ -99,6 +98,9 @@ function component(parent,x,y,left,top,width,height){
   this.width=width;
   this.height=height;
   this.state=0;
+  this.mouseHovered=function(){
+    return this.left-gameState.gridoffset<=gameState.mouseX&&this.left+this.width+gameState.gridoffset>gameState.mouseX&&this.top-gameState.gridoffset<=gameState.mouseY&&this.top+this.height+gameState.gridoffset>gameState.mouseY;
+  }
   this.update=function(){
     if(this.state==1){
       gameState.context.fillStyle=gameState.color_p1;
@@ -109,7 +111,7 @@ function component(parent,x,y,left,top,width,height){
     else if(this.state==3){
       gameState.context.fillStyle=gameState.color_disabled;
     }
-    else if(this.left-gameState.gridoffset<=gameState.mouseX&&this.left+this.width+gameState.gridoffset>gameState.mouseX&&this.top-gameState.gridoffset<=gameState.mouseY&&this.top+this.height+gameState.gridoffset>gameState.mouseY){
+    else if(this.mouseHovered()){
       gameState.context.fillStyle=gameState.color_hover;
       gameState.now_hovered=this;
     }else{
@@ -118,8 +120,9 @@ function component(parent,x,y,left,top,width,height){
     gameState.context.fillRect(this.left,this.top,this.width,this.height);
   }
   this.click=function(){
-    if(this.state==0){
+    if(this.state==0 && this.mouseHovered()){
       this.state=gameState.player;
+      this.parent.active--;
       change_player();
       setpossiblegrid(this.x,this.y);
     }
@@ -146,9 +149,8 @@ function clicked(e){
 }
 function updateCanvas(){
   gameState.context.clearRect(0,0,gameState.canvas.width,gameState.canvas.height);
-  gameState.context.fillStyle="#99FF99";
-  gameState.context.fillRect(0,0,540,540);
-  gameState.context.fillStyle="#0000FF";
+  gameState.context.fillStyle=gameState.color_bg;
+  gameState.context.fillRect(0,0,550,550);
 
   for(let i=0;i<3;i++){
     for(let j=0;j<3;j++){
