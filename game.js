@@ -11,7 +11,7 @@ var gameState={
   mouseX:0,mouseY:0,
   color_bg:"#99FF99",
   color:"white",
-  color_hover:"#FFFF00",
+  color_hover:"#ffc2c2",
   color_p1:"red",
   color_p2:"blue",
   color_disabled:"#333333"
@@ -35,7 +35,7 @@ function mouseMoved(e){
   gameState.mouseX=Math.round(e.clientX-cRect.left);
   gameState.mouseY=Math.round(e.clientY-cRect.top); //todo
 
-  document.getElementById("mousePosition").innerHTML=gameState.mouseX+", "+gameState.mouseY;
+  //document.getElementById("mousePosition").innerHTML=gameState.mouseX+", "+gameState.mouseY;
 }
 function group(x,y,left,top){
   this.x=x;
@@ -43,11 +43,12 @@ function group(x,y,left,top){
   this.left=left;
   this.top=top;
   this.active=9;
+  this.winner=0;
   this.can=new Array(3);
   for(let i=0;i<3;i++){
     this.can[i]=new Array(3);
     for(let j=0;j<3;j++){
-      this.can[i][j]=new component(this,i+1,j+1,this.left+i*gameState.gridsize+gameState.gridoffset,this.top+j*gameState.gridsize+gameState.gridoffset,gameState.gridsize-2*gameState.gridoffset,gameState.gridsize-2*gameState.gridoffset);
+      this.can[i][j]=new component(this,i,j,this.left+i*gameState.gridsize+gameState.gridoffset,this.top+j*gameState.gridsize+gameState.gridoffset,gameState.gridsize-2*gameState.gridoffset,gameState.gridsize-2*gameState.gridoffset);
     }
   }
   this.update=function(){
@@ -71,9 +72,71 @@ function group(x,y,left,top){
       }
     }
   }
+  this.checkMatch=function(x,y){
+    let cnt=0;
+    for(let i=0;i<3;i++){
+      if(this.can[i][y].state==1)cnt++;
+      else if(this.can[i][y].state==2)cnt--;
+    }
+    if(cnt==3){
+      this.win(1);
+    }
+    else if(cnt==-3){
+      this.win(2);
+    }
+
+    cnt=0;
+    for(let i=0;i<3;i++){
+      if(this.can[x][i].state==1)cnt++;
+      else if(this.can[x][i].state==2)cnt--;
+    }
+    if(cnt==3){
+      this.win(1);
+    }
+    else if(cnt==-3){
+      this.win(2);
+    }
+
+    if(x==y){
+      cnt=0;
+      for(let i=0;i<3;i++){
+        if(this.can[i][i].state==1)cnt++;
+        else if(this.can[i][i].state==2)cnt--;
+      }
+      if(cnt==3){
+        this.win(1);
+      }
+      else if(cnt==-3){
+        this.win(2);
+      }
+    }
+    if(x+y==2){
+      cnt=0;
+      for(let i=0;i<3;i++){
+        if(this.can[i][2-i].state==1)cnt++;
+        else if(this.can[i][2-i].state==2)cnt--;
+      }
+      if(cnt==3){
+        this.win(1);
+      }
+      else if(cnt==-3){
+        this.win(2);
+      }
+    }
+  }
+
+  this.win=function(player){
+      this.active=0;
+      this.winner=player;
+      for(let i=0;i<3;i++){
+        for(let j=0;j<3;j++){
+          this.can[i][j].state=player;
+        }
+      }
+  }
 }
 function setpossiblegrid(x,y){
-  if(gameState.grid[x-1][y-1].active!=0){
+  if(gameState.grid[x][y].active!=0){
     gameState.possiblegrid={x:x,y:y};
   }else{
     gameState.possiblegrid=0;
@@ -81,7 +144,7 @@ function setpossiblegrid(x,y){
 
   for(let i=0;i<3;i++){
     for(let j=0;j<3;j++){
-      if(gameState.possiblegrid!=0&&(gameState.possiblegrid.x-1!=i || gameState.possiblegrid.y-1!=j))
+      if(gameState.possiblegrid!=0&&(gameState.possiblegrid.x!=i || gameState.possiblegrid.y!=j))
         gameState.grid[i][j].setDisabled();
       else {
         gameState.grid[i][j].setEnabled();
@@ -123,6 +186,7 @@ function component(parent,x,y,left,top,width,height){
     if(this.state==0 && this.mouseHovered()){
       this.state=gameState.player;
       this.parent.active--;
+      this.parent.checkMatch(this.x,this.y);
       change_player();
       setpossiblegrid(this.x,this.y);
     }
@@ -139,10 +203,13 @@ function component(parent,x,y,left,top,width,height){
 function change_player(){
   if(gameState.player==1){
     gameState.player=2;
+    gameState.color_hover="#12FFFF";
   }else if(gameState.player==2){
     gameState.player=1;
+    gameState.color_hover="#ffc2c2";
   }
   document.getElementById("player").innerHTML="Player "+gameState.player;
+
 }
 function clicked(e){
   gameState.now_hovered.click();
