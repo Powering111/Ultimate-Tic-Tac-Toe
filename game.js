@@ -33,9 +33,73 @@ function startGame(){
 function mouseMoved(e){
   let cRect= gameState.canvas.getBoundingClientRect();
   gameState.mouseX=Math.round(e.clientX-cRect.left);
-  gameState.mouseY=Math.round(e.clientY-cRect.top); //todo
+  gameState.mouseY=Math.round(e.clientY-cRect.top);
 
   //document.getElementById("mousePosition").innerHTML=gameState.mouseX+", "+gameState.mouseY;
+}
+function isMatch(arr,x,y){
+  let cnt=0;
+  for(let i=0;i<3;i++){
+    if(arr[i][y].state==1)cnt++;
+    else if(arr[i][y].state==2)cnt--;
+  }
+  if(cnt==3){
+    return 1;
+  }
+  else if(cnt==-3){
+    return 2;
+  }
+
+  cnt=0;
+  for(let i=0;i<3;i++){
+    if(arr[x][i].state==1)cnt++;
+    else if(arr[x][i].state==2)cnt--;
+  }
+  if(cnt==3){
+    return 1;
+  }
+  else if(cnt==-3){
+    return 2;
+  }
+
+  if(x==y){
+    cnt=0;
+    for(let i=0;i<3;i++){
+      if(arr[i][i].state==1)cnt++;
+      else if(arr[i][i].state==2)cnt--;
+    }
+    if(cnt==3){
+      return 1;
+    }
+    else if(cnt==-3){
+      return 2;
+    }
+  }
+  if(x+y==2){
+    cnt=0;
+    for(let i=0;i<3;i++){
+      if(arr[i][2-i].state==1)cnt++;
+      else if(arr[i][2-i].state==2)cnt--;
+    }
+    if(cnt==3){
+      return 1;
+    }
+    else if(cnt==-3){
+      return 2;
+    }
+  }
+
+  return 0;
+}
+function checkUltimateMatch(x,y){
+  let winner = isMatch(gameState.grid,x,y);
+  if(winner!=0){
+    UltimateWin(winner);
+  }
+}
+function UltimateWin(winner){
+
+  setTimeout(function(){alert("Player "+winner+" 승리!");},500);
 }
 function group(x,y,left,top){
   this.x=x;
@@ -43,7 +107,7 @@ function group(x,y,left,top){
   this.left=left;
   this.top=top;
   this.active=9;
-  this.winner=0;
+  this.state=0;
   this.can=new Array(3);
   for(let i=0;i<3;i++){
     this.can[i]=new Array(3);
@@ -73,66 +137,22 @@ function group(x,y,left,top){
     }
   }
   this.checkMatch=function(x,y){
-    let cnt=0;
-    for(let i=0;i<3;i++){
-      if(this.can[i][y].state==1)cnt++;
-      else if(this.can[i][y].state==2)cnt--;
-    }
-    if(cnt==3){
-      this.win(1);
-    }
-    else if(cnt==-3){
-      this.win(2);
+    let winner = isMatch(this.can,x,y);
+    if(winner!=0){
+      this.win(winner,x,y);
     }
 
-    cnt=0;
-    for(let i=0;i<3;i++){
-      if(this.can[x][i].state==1)cnt++;
-      else if(this.can[x][i].state==2)cnt--;
-    }
-    if(cnt==3){
-      this.win(1);
-    }
-    else if(cnt==-3){
-      this.win(2);
-    }
-
-    if(x==y){
-      cnt=0;
-      for(let i=0;i<3;i++){
-        if(this.can[i][i].state==1)cnt++;
-        else if(this.can[i][i].state==2)cnt--;
-      }
-      if(cnt==3){
-        this.win(1);
-      }
-      else if(cnt==-3){
-        this.win(2);
-      }
-    }
-    if(x+y==2){
-      cnt=0;
-      for(let i=0;i<3;i++){
-        if(this.can[i][2-i].state==1)cnt++;
-        else if(this.can[i][2-i].state==2)cnt--;
-      }
-      if(cnt==3){
-        this.win(1);
-      }
-      else if(cnt==-3){
-        this.win(2);
-      }
-    }
   }
 
   this.win=function(player){
       this.active=0;
-      this.winner=player;
+      this.state =player;
       for(let i=0;i<3;i++){
         for(let j=0;j<3;j++){
           this.can[i][j].state=player;
         }
       }
+      checkUltimateMatch(this.x,this.y);
   }
 }
 function setpossiblegrid(x,y){
