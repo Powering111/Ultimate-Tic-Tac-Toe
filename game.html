@@ -4,15 +4,26 @@
     <meta charset="utf-8">
     <script type="text/javascript" src="game.js"></script>
     <title>Ultimate Tic-Tac-Toe</title>
+    <style>
 
+      body{
+        background:linear-gradient(to right, red, orange , yellow, green, cyan, blue, violet);
+      }
+    </style>
   </head>
-  <body onload="startGame();">
-    <h1 id="player">Player 1</h1>
+  <body onload="startGame();" style="text-align:center;">
+    <h1>Ultimate Tic-Tac-Toe</h1>
+    <p>made by Juntae Jeong</p>
+    <h2 id="player">Player 1</h2>
     <br>
     <canvas id="game" width="550" height="550"
-      onclick="clicked(window.event)" 
-      onmousemove="mouseMoved(event)">
+      onclick="clicked(window.event)"
+      onmousemove="mouseMoved(event)"
+      style=""
+      >
+
     </canvas>
+    <!--<button onclick="change_player()">Change Player!!!</button>-->
     <span id="mousePosition"></span>
   </body>
 </html>
