@@ -10,7 +10,7 @@ var gameState={
   grid:new Array(9),
   active:9,
   mouseX:0,mouseY:0,
-  color_bg:"#99FF99",
+  color_bg:"#45f9ff",
   color:"white",
   color_hover:"#ffc2c2",
   color_p1:"red",
