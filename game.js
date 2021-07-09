@@ -128,12 +128,14 @@ function group(x,y,left,top){
   this.win=function(player){
       this.active=0;
       this.state =player;
+      decreaseActive();
       for(let i=0;i<3;i++){
         for(let j=0;j<3;j++){
           this.can[i][j].state=player;
         }
       }
       checkUltimateMatch(this.x,this.y);
+
   }
 }
 

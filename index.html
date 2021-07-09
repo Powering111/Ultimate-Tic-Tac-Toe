@@ -12,18 +12,18 @@
       }
       #rule{
         align-content:center;
-        max-width:600px;
+        max-width:1010px;
         border:1px solid black;
         margin: 0 auto;
       }
       #rule_p{
+        margin-left:10px;
         text-align:left;
       }
     </style>
   </head>
   <body onload="startGame();">
     <h1>궁극의 틱택토</h1>
-    <p>제작 정준태</p>
     <h2 id="player">Player 1</h2>
     <br>
     <canvas id="game" width="550" height="550"
@@ -42,18 +42,22 @@
   <p id="rule_p">
 1. 첫번째 사람은 원하는 칸을 선택할 수 있습니다.
 <br><br>
-2. 첫번째 사람이 작은 3×3의 격자에서 선택한 위치의 큰 3×3 판에서 한칸을 골라야 합니다.
-<br>예를 들어, 전 사람이 작은 3×3 격자에서 왼쪽 위 칸을 골랐다면, 다음사람은 큰 3×3 격자에서 왼쪽 위 칸을 골라야 합니다.
+2. 첫번째 사람이 작은 3×3의 격자에서 선택한 위치의 큰 3×3 판에서 한 칸을 골라야 합니다.
+<br>예를 들어, 전 사람이 작은 3×3 격자에서 왼쪽 위 칸을 골랐다면, 다음 사람은 큰 3×3 격자에서 왼쪽 위 칸을 골라야 합니다.
 <br><br>
-3. (2) 과정을 반복합니다. 작은 3×3 격자에서 가로, 세로, 대각선 한줄을 채우는데 성공했다면, 그 3×3칸은 당신의 것입니다.
+3. (2) 과정을 반복합니다. 작은 3×3 격자에서 가로, 세로, 대각선 한 줄을 채우는데 성공했다면, 그 3×3칸은 당신의 것입니다.
 <br><br>
 4. 다시 (2) 과정을 반복합니다. 이때 이미 누군가 가져간 3×3 격자를 칠해야 하는 상황이라면, 당신은 당신이 원하는 아무 곳이나 선택할 수 있습니다.
 <br><br>
-5. 큰 3×3 격자에서 가로, 세로, 대각선 한줄을 채우는데 성공했다면, 축하드립니다! 당신이 이겼습니다.
-<br>
-<br>
-idea : 『Math with bad drawings』, Ben Orlin
+5. 큰 3×3 격자에서 가로, 세로, 대각선 한 줄을 채우는데 성공했다면, 축하드립니다! 당신이 이겼습니다.
+
 </p>
 </div>
+<br>
+<br>
+<br><br><br>
+idea : 『Math with bad drawings』, Ben Orlin
+<br>
+Copyright © Juntae Jeong, 2021
   </body>
 </html>
