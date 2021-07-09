@@ -232,7 +232,12 @@ function UltimateWin(winner){
 function UltimateDraw(){
   setTimeout(function(){alert("무승부");},500);
 }
-
+function decreaseActive(){
+  gameState.active--;
+  if(gameState.active==0){
+    UltimateDraw();
+  }
+}
 function setpossiblegrid(x,y){
   if(gameState.grid[x][y].active!=0){
     gameState.possiblegrid={x:x,y:y};
