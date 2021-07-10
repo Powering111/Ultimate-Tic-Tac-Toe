@@ -1,4 +1,5 @@
 var gameState={
+  game:true,
   canvas:null,
   context:null,
   player:1,
@@ -128,14 +129,14 @@ function group(x,y,left,top){
   this.win=function(player){
       this.active=0;
       this.state =player;
-      decreaseActive();
+      
       for(let i=0;i<3;i++){
         for(let j=0;j<3;j++){
           this.can[i][j].state=player;
         }
       }
       checkUltimateMatch(this.x,this.y);
-
+      decreaseActive();
   }
 }
 
@@ -227,6 +228,7 @@ function checkUltimateMatch(x,y){
   }
 }
 function UltimateWin(winner){
+  gameState.game=false;
   setTimeout(function(){alert("Player "+winner+" 승리!");},500);
 }
 function UltimateDraw(){
@@ -234,7 +236,7 @@ function UltimateDraw(){
 }
 function decreaseActive(){
   gameState.active--;
-  if(gameState.active==0){
+  if(gameState.active==0&&gameState.game==true){
     UltimateDraw();
   }
 }
