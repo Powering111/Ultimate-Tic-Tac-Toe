@@ -1,24 +1,4 @@
-var gameState={
-  game:true,
-  canvas:null,
-  context:null,
-  player:1,
-  possiblegrid:0,
-  now_hovered:null,
-  gridsize:60,
-  gridoffset:3,
-  groupoffset:5,
-  grid:new Array(9),
-  active:9,
-  mouseX:0,mouseY:0,
-  color_bg:"#45f9ff",
-  color:"white",
-  color_hover:"#ffc2c2",
-  color_p1:"red",
-  color_p2:"blue",
-  color_disabled:"#333333",
-  color_draw:"#8a5a94"
-};
+var gameState;
 function component(parent,x,y,left,top,width,height){
   this.parent=parent;
   this.x=x;
@@ -129,7 +109,7 @@ function group(x,y,left,top){
   this.win=function(player){
       this.active=0;
       this.state =player;
-      
+
       for(let i=0;i<3;i++){
         for(let j=0;j<3;j++){
           this.can[i][j].state=player;
@@ -141,6 +121,27 @@ function group(x,y,left,top){
 }
 
 function startGame(){
+  gameState={
+    game:true,
+    canvas:null,
+    context:null,
+    player:1,
+    possiblegrid:0,
+    now_hovered:null,
+    gridsize:60,
+    gridoffset:3,
+    groupoffset:5,
+    grid:new Array(9),
+    active:9,
+    mouseX:0,mouseY:0,
+    color_bg:"#f3e6fc",
+    color:"white",
+    color_hover:"#ffc2c2",
+    color_p1:"red",
+    color_p2:"blue",
+    color_disabled:"#333333",
+    color_draw:"#8a5a94"
+  };
   gameState.canvas = document.getElementById("game");
   gameState.context = gameState.canvas.getContext("2d");
 
