@@ -101,10 +101,7 @@ function group(x,y,left,top){
           this.can[i][j].state=4;
         }
       }
-      gameState.active--;
-      if(gameState.active==0){
-        UltimateDraw();
-      }
+      decreaseActive();
     }
   }
 
@@ -125,6 +122,7 @@ function group(x,y,left,top){
 function startGame(){
   gameState={
     game:true,
+    paused:false,
     canvas:null,
     context:null,
     player:1,
@@ -178,6 +176,8 @@ function update(){
   }
   updateTime();
   updateDisplay();
+  document.getElementById("debug").innerHTML=gameState.active;
+
 }
 function updateTime(){
   let now_frame = new Date().getTime();
@@ -189,7 +189,7 @@ function updateTime(){
         gameState.time_after_finished--;
         if(gameState.time_after_finished<=0){
           change_player();
-          gameState.time_after_finished=gameState.max_time_after_finished;
+
         }
       }else{
         gameState.time_p1--;
@@ -200,7 +200,7 @@ function updateTime(){
         gameState.time_after_finished--;
         if(gameState.time_after_finished<=0){
           change_player();
-          gameState.time_after_finished=gameState.max_time_after_finished;
+
         }
       }else{
         gameState.time_p2--;
@@ -209,40 +209,7 @@ function updateTime(){
     accumulatedMs=0;
   }
 }
-function updateDisplay(){
-  //document.getElementById("debug").innerHTML=gameState.time_p1+","+gameState.time_p2+" ("+gameState.time_after_finished+")";
-  if(gameState.player==1){
-    displayTimer(1,timer1);
-    displayTimer(2,timer2);
-  }
-  else{
-      displayTimer(2,timer1);
-      displayTimer(1,timer2);
-  }
 
-}
-function displayTimer(player,timer){
-  if(player==1){
-    if(gameState.time_p1>0){
-      displayTimerBg(gameState.time_p1,gameState.max_time,timer,"red","#ffd4d4");
-    }
-    else{
-      displayTimerBg(gameState.time_after_finished,gameState.max_time_after_finished,timer,"#910002","#ffd4d4");
-    }
-  }
-  else{
-    if(gameState.time_p2>0){
-      displayTimerBg(gameState.time_p2,gameState.max_time,timer,"blue","#c4ddff");
-    }
-    else{
-      displayTimerBg(gameState.time_after_finished,gameState.max_time_after_finished,timer,"#05008a","#c4ddff");
-    }
-  }
-}
-function displayTimerBg(time,maxtime,to,color1,color2){
-  let percent=(time/maxtime)*100;
-  to.style.background="linear-gradient(to right, "+color1+" "+(percent-5)+"%,"+color2+" "+(percent)+"%)";
-}
 function isMatch(arr,x,y){
   let cnt=0;
   for(let i=0;i<3;i++){
@@ -307,11 +274,13 @@ function UltimateWin(winner){
   gameState.game=false;
   clearInterval(interval);
   setTimeout(function(){alert("Player "+winner+" 승리!");},500);
+  update();
 }
 function UltimateDraw(){
   gameState.game=false;
   clearInterval(interval);
   setTimeout(function(){alert("무승부");},500);
+  update();
 }
 function decreaseActive(){
   gameState.active--;
@@ -347,6 +316,7 @@ function change_player(){
     document.getElementById("player").innerHTML="Player 1";
   }
   accumulatedMs=0;
+  gameState.time_after_finished=gameState.max_time_after_finished;
 }
 
 function mouseMoved(e){
