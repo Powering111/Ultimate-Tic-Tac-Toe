@@ -210,7 +210,7 @@ function updateTime(){
   }
 }
 function updateDisplay(){
-  document.getElementById("debug").innerHTML=gameState.time_p1+","+gameState.time_p2+" ("+gameState.time_after_finished+")";
+  //document.getElementById("debug").innerHTML=gameState.time_p1+","+gameState.time_p2+" ("+gameState.time_after_finished+")";
   if(gameState.player==1){
     displayTimer(1,timer1);
     displayTimer(2,timer2);
