@@ -53,5 +53,5 @@ function displayTimer(player,timer,under){
 }
 function displayTimerBg(time,maxtime,to,color1,color2){
   let percent=(time/maxtime)*100;
-  to.style.background="linear-gradient(to right, "+color1+" "+(percent-5)+"%,"+color2+" "+(percent)+"%)";
+  to.style.background="linear-gradient(to right, "+color1+" "+(percent-3)+"%,"+color2+" "+(percent)+"%)";
 }

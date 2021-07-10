@@ -37,8 +37,8 @@ function component(parent,x,y,left,top,width,height){
   this.click=function(){
     if(this.state==0 && this.mouseHovered()){
       this.state=gameState.player;
-      this.parent.decreaseActive();
       this.parent.checkMatch(this.x,this.y);
+      this.parent.decreaseActive();
       change_player();
       setpossiblegrid(this.x,this.y);
     }
@@ -119,10 +119,24 @@ function group(x,y,left,top){
   }
 }
 
+var gameArea = {
+  canvas : document.createElement("canvas"),
+  start : function() {
+    this.canvas.id="game";
+    this.canvas.width = 550;
+    this.canvas.height = 550;
+    this.canvas.addEventListener("click",function(){clicked(window.event);});
+    this.canvas.addEventListener("mousemove",function(){mouseMoved(event);});
+    //this.onclick="clicked(window.event)";
+    //this.canvas.onmousemove="mouseMoved(event)";
+    gameState.context = this.canvas.getContext("2d");
+    document.body.insertBefore(this.canvas, document.getElementById("belowGameArea"));
+  }
+}
 function startGame(){
   gameState={
     game:true,
-    paused:false,
+    paused:true,
     canvas:null,
     context:null,
     player:1,
@@ -150,8 +164,12 @@ function startGame(){
   };
   gameState.time_p1=gameState.time_p2=gameState.max_time;
   gameState.time_started=last_frame=new Date().getTime();
-  gameState.canvas = document.getElementById("game");
-  gameState.context = gameState.canvas.getContext("2d");
+  //gameState.canvas = document.getElementById("game");
+  //gameState.context = gameState.canvas.getContext("2d");
+  document.getElementById("btn_gameStart").style.display="none";
+
+  gameState.canvas=gameArea.canvas;
+  gameArea.start();
 
   for(let i=0;i<9;i++){
     gameState.grid[i]=new Array(9);
@@ -162,6 +180,9 @@ function startGame(){
   interval=setInterval(update,20);
   timer1=document.getElementById('player');
   timer2=document.getElementById('player_c');
+  document.getElementsByClassName("time")[0].style.display="block";
+
+  document.getElementsByClassName("time")[1].style.display="block";
 
 }
 function update(){
@@ -181,7 +202,8 @@ function update(){
 }
 function updateTime(){
   let now_frame = new Date().getTime();
-  accumulatedMs+=now_frame - last_frame;
+  if(!gameState.paused)
+    accumulatedMs+=now_frame - last_frame;
   last_frame=now_frame;
   if(accumulatedMs>=1000){
     if(gameState.player==1){
@@ -325,5 +347,6 @@ function mouseMoved(e){
   gameState.mouseY=Math.round(e.clientY-cRect.top);
 }
 function clicked(e){
+  gameState.paused=false;
   gameState.now_hovered.click();
 }
