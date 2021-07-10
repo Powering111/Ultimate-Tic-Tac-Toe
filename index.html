@@ -10,12 +10,14 @@
   <body onload="startGame();">
     <h1>궁극의 틱택토</h1>
     <h2 id="player">Player 1</h2>
+    <h2 id="player_c"></h2>
     <br>
     <canvas id="game" width="550" height="550"
       onclick="clicked(window.event)"
       onmousemove="mouseMoved(event)"
       ></canvas>
     <br>
+    <p id="debug">Debug</p>
     <br>
     <a id="help_label" onclick="toggleHelp()">플레이 방법</a>
     <div id="help_container" onmousedown="mouse_down_all()">

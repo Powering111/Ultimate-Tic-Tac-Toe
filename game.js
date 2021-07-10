@@ -1,4 +1,6 @@
-var gameState;
+var gameState,interval;
+var accumulatedMs=0,last_frame;
+var timer1,timer2;
 function component(parent,x,y,left,top,width,height){
   this.parent=parent;
   this.x=x;
@@ -140,11 +142,18 @@ function startGame(){
     color_p1:"red",
     color_p2:"blue",
     color_disabled:"#333333",
-    color_draw:"#8a5a94"
+    color_draw:"#8a5a94",
+    max_time:60,
+    time_p1:0,
+    time_p2:0,
+    max_time_after_finished:10,
+    time_after_finished:10,
+    time_started:0
   };
+  gameState.time_p1=gameState.time_p2=gameState.max_time;
+  gameState.time_started=last_frame=new Date().getTime();
   gameState.canvas = document.getElementById("game");
   gameState.context = gameState.canvas.getContext("2d");
-
 
   for(let i=0;i<9;i++){
     gameState.grid[i]=new Array(9);
@@ -152,10 +161,12 @@ function startGame(){
       gameState.grid[i][j]=new group(i,j,i*(3*gameState.gridsize+gameState.groupoffset),j*(3*gameState.gridsize+gameState.groupoffset));
     }
   }
-  var interval=setInterval(updateCanvas,20);
+  interval=setInterval(update,20);
+  timer1=document.getElementById('player');
+  timer2=document.getElementById('player_c');
 
 }
-function updateCanvas(){
+function update(){
   gameState.context.clearRect(0,0,gameState.canvas.width,gameState.canvas.height);
   gameState.context.fillStyle=gameState.color_bg;
   gameState.context.fillRect(0,0,550,550);
@@ -165,9 +176,73 @@ function updateCanvas(){
       gameState.grid[i][j].update();
     }
   }
+  updateTime();
+  updateDisplay();
+}
+function updateTime(){
+  let now_frame = new Date().getTime();
+  accumulatedMs+=now_frame - last_frame;
+  last_frame=now_frame;
+  if(accumulatedMs>=1000){
+    if(gameState.player==1){
+      if(gameState.time_p1<=0){
+        gameState.time_after_finished--;
+        if(gameState.time_after_finished<=0){
+          change_player();
+          gameState.time_after_finished=gameState.max_time_after_finished;
+        }
+      }else{
+        gameState.time_p1--;
+      }
+    }
+    else{
+      if(gameState.time_p2<=0){
+        gameState.time_after_finished--;
+        if(gameState.time_after_finished<=0){
+          change_player();
+          gameState.time_after_finished=gameState.max_time_after_finished;
+        }
+      }else{
+        gameState.time_p2--;
+      }
+    }
+    accumulatedMs=0;
+  }
+}
+function updateDisplay(){
+  document.getElementById("debug").innerHTML=gameState.time_p1+","+gameState.time_p2+" ("+gameState.time_after_finished+")";
+  if(gameState.player==1){
+    displayTimer(1,timer1);
+    displayTimer(2,timer2);
+  }
+  else{
+      displayTimer(2,timer1);
+      displayTimer(1,timer2);
+  }
 
 }
-
+function displayTimer(player,timer){
+  if(player==1){
+    if(gameState.time_p1>0){
+      displayTimerBg(gameState.time_p1,gameState.max_time,timer,"red","#ffd4d4");
+    }
+    else{
+      displayTimerBg(gameState.time_after_finished,gameState.max_time_after_finished,timer,"#910002","#ffd4d4");
+    }
+  }
+  else{
+    if(gameState.time_p2>0){
+      displayTimerBg(gameState.time_p2,gameState.max_time,timer,"blue","#c4ddff");
+    }
+    else{
+      displayTimerBg(gameState.time_after_finished,gameState.max_time_after_finished,timer,"#05008a","#c4ddff");
+    }
+  }
+}
+function displayTimerBg(time,maxtime,to,color1,color2){
+  let percent=(time/maxtime)*100;
+  to.style.background="linear-gradient(to right, "+color1+" "+(percent-5)+"%,"+color2+" "+(percent)+"%)";
+}
 function isMatch(arr,x,y){
   let cnt=0;
   for(let i=0;i<3;i++){
@@ -230,9 +305,12 @@ function checkUltimateMatch(x,y){
 }
 function UltimateWin(winner){
   gameState.game=false;
+  clearInterval(interval);
   setTimeout(function(){alert("Player "+winner+" 승리!");},500);
 }
 function UltimateDraw(){
+  gameState.game=false;
+  clearInterval(interval);
   setTimeout(function(){alert("무승부");},500);
 }
 function decreaseActive(){
@@ -262,12 +340,13 @@ function change_player(){
   if(gameState.player==1){
     gameState.player=2;
     gameState.color_hover="#12FFFF";
+    document.getElementById("player").innerHTML="Player 2";
   }else if(gameState.player==2){
     gameState.player=1;
     gameState.color_hover="#ffc2c2";
+    document.getElementById("player").innerHTML="Player 1";
   }
-  document.getElementById("player").innerHTML="Player "+gameState.player;
-
+  accumulatedMs=0;
 }
 
 function mouseMoved(e){

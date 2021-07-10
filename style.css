@@ -3,6 +3,22 @@ body{
   background-color:#f3e6fc;
   text-align:center;
 }
+#player{
+  margin:auto;
+  width:80%;
+  padding-top:2px;
+
+  padding-bottom:2px;
+  background:linear-gradient(to right, red 50%,#ffd4d4 60%);
+  color:white;
+}
+#player_c{
+  margin:auto;
+  padding-bottom:10px;
+  width:80%;
+  background:linear-gradient(to right, blue 50%,#ffd4d4 60%);
+  color:white;
+}
 #rule{
   align-content:center;
   max-width:1010px;
