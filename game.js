@@ -153,8 +153,10 @@ function startGame(){
     color_hover:"#ffc2c2",
     color_p1:"#ff0000",
     color_p1_hover:"#ffc2c2",
+    color_p1_cho:"#910002",
     color_p2:"#0000ff",
     color_p2_hover:"#12ffff",
+    color_p2_cho:"#05008a",
     color_disabled:"#333333",
     color_draw:"#8a5a94",
     max_time:120,
@@ -194,6 +196,8 @@ function loadSettings(){
   gameState.color_p2=document.getElementById("p2_color").value;
   gameState.color_p2_hover=document.getElementById("p2_color_hover").value;
   gameState.max_time=document.getElementById("time_limit").value;
+  gameState.max_time_after_finished=document.getElementById("time_limit_cho").value;
+  gameState.color_hover=gameState.color_p1_hover;
 }
 
 function update(){
@@ -305,13 +309,13 @@ function checkUltimateMatch(x,y){
 function UltimateWin(winner){
   gameState.game=false;
   clearInterval(interval);
-  setTimeout(function(){alert("Player "+winner+" 승리!");update();},500);
+  setTimeout(function(){alert("Player "+winner+" 승리!");setpossibleEvery();update();},500);
 
 }
 function UltimateDraw(){
   gameState.game=false;
   clearInterval(interval);
-  setTimeout(function(){alert("무승부");update();},500);
+  setTimeout(function(){alert("무승부");setpossibleEvery();update();},500);
 
 }
 function decreaseActive(){

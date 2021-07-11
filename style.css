@@ -1,4 +1,4 @@
-
+@import url(http://fonts.googleapis.com/earlyaccess/nanumgothic.css);
 body{
   background-color:#f3e6fc;
   text-align:center;
@@ -56,7 +56,7 @@ body{
   align-content:center;
   max-width:1010px;
   background:#fcfff2;
-  box-shadow:0 0 20px black;
+  border: 3px solid white;
 
   border-radius:5px;
   margin: 0 auto;
@@ -80,7 +80,22 @@ body{
   left:50%;
   transform:translate(-50%,-50%);
   z-index:9999;
-
+  user-select: none;
+}
+#credit_container{
+  font-size:25px; 
+  width:720px;
+  padding:20px 0px;
+  display:none;
+  background-color:#f1f1f1;
+  box-shadow:0 0 20px black;
+  border-radius:8px;
+  position:absolute;
+  top:40%;
+  left:50%;
+  transform:translate(-50%,-50%);
+  z-index:9999;
+  user-select: none;
 }
 .time{
   display:none;

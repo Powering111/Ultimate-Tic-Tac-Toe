@@ -1,4 +1,4 @@
-var help=false;
+var help=false,credit=false;
 function toggleHelp(){
   if(help){
     document.getElementById("help_container").style.display="none";
@@ -8,10 +8,22 @@ function toggleHelp(){
     help=true;
   }
 }
+function toggleCredit(){
+  if(credit){
+    document.getElementById("credit_container").style.display="none";
+    credit=false;
+  }else{
+    document.getElementById("credit_container").style.display="block";
+    credit=true;
+  }
+}
 
 function mouse_down_all(){
   if(help){
     toggleHelp();
+  }
+  if(credit){
+    toggleCredit();
   }
 }
 function updateDisplay(){
@@ -29,25 +41,25 @@ function updateDisplay(){
 function displayTimer(player,timer,under){
   if(player==1){
     if(gameState.time_p1>0){
-      displayTimerBg(gameState.time_p1,gameState.max_time,timer,"red","#ffd4d4");
+      displayTimerBg(gameState.time_p1,gameState.max_time,timer,gameState.color_p1,gameState.color_p1_hover);
     }
     else{
       if(!under)
-      displayTimerBg(gameState.time_after_finished,gameState.max_time_after_finished,timer,"#910002","#ffd4d4");
+      displayTimerBg(gameState.time_after_finished,gameState.max_time_after_finished,timer,gameState.color_p1_cho,gameState.color_p1_hover);
       else{
-      displayTimerBg(gameState.max_time_after_finished,gameState.max_time_after_finished,timer,"#910002","#ffd4d4");
+      displayTimerBg(gameState.max_time_after_finished,gameState.max_time_after_finished,timer,gameState.color_p1_cho,gameState.color_p1_hover);
       }
     }
   }
   else{
     if(gameState.time_p2>0){
-      displayTimerBg(gameState.time_p2,gameState.max_time,timer,"blue","#c4ddff");
+      displayTimerBg(gameState.time_p2,gameState.max_time,timer,gameState.color_p2,gameState.color_p2_hover);
     }
     else{
       if(!under)
-      displayTimerBg(gameState.time_after_finished,gameState.max_time_after_finished,timer,"#05008a","#c4ddff");
+      displayTimerBg(gameState.time_after_finished,gameState.max_time_after_finished,timer,gameState.color_p2_cho,gameState.color_p2_hover);
       else
-      displayTimerBg(gameState.max_time_after_finished,gameState.max_time_after_finished,timer,"#05008a","#c4ddff");
+      displayTimerBg(gameState.max_time_after_finished,gameState.max_time_after_finished,timer,gameState.color_p2_cho,gameState.color_p2_hover);
     }
   }
 }
