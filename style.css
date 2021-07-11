@@ -1,4 +1,4 @@
-@import url(http://fonts.googleapis.com/earlyaccess/nanumgothic.css);
+
 body{
   background-color:#f3e6fc;
   text-align:center;
@@ -52,6 +52,14 @@ body{
   background-color:rgba(255,255,0,1);
   transition:background-color 0.3s;
 }
+.setting_color{
+  border:none;
+  background:none;
+  padding:0px;
+}
+.setting_number{
+  width:40px;
+}
 #rule{
   align-content:center;
   max-width:1010px;
@@ -68,6 +76,14 @@ body{
 #help_label{
   display:block;
   user-select: none;
+  width:140px;
+  padding:5px;
+  margin:auto;
+  background-color:#FFFFFF00;
+  transition:background-color 0.2s;
+}
+#help_label:hover{
+  background-color:#FFFFFF88;
 }
 #help_container{
   width:1020px;
@@ -82,8 +98,20 @@ body{
   z-index:9999;
   user-select: none;
 }
+#credit_label{
+  display:block;
+  user-select: none;
+  width:140px;
+  padding:5px;
+  margin:auto;
+  background-color:#FFFFFF00;
+  transition:background-color 0.2s;
+}
+#credit_label:hover{
+  background-color:#FFFFFF88;
+}
 #credit_container{
-  font-size:25px; 
+  font-size:25px;
   width:720px;
   padding:20px 0px;
   display:none;
@@ -99,4 +127,10 @@ body{
 }
 .time{
   display:none;
+}
+#copyright{
+  position:fixed;
+  bottom:-10px;
+  left:50%;
+  transform:translate(-50%,-50%);
 }

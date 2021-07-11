@@ -18,12 +18,12 @@
       <a id="btn_gameStart" onclick="startGame()">게임 시작</a>
       <img src="logo.png" alt="Tic-Tac-Toe">
       <div id="setting">
-        <div class="settings">Player 1 : <input id="p1_color" type="color" value="#ff0000"></div>
-        <div class="settings">Player 1(hover) : <input id="p1_color_hover" type="color" value="#ffc2c2"></div>
-        <div class="settings">Player 2 : <input id="p2_color" type="color" value="#0000ff"></div>
-        <div class="settings">Player 2(hover) : <input id="p2_color_hover" type="color" value="#12ffff"></div>
-        <div class="settings">Time Limit : <input id="time_limit" type="number" size="4" value="120"></div>
-        <div class="settings">Reading Seconds : <input id="time_limit_cho" type="number" size="4" value="8"></div>
+        <div class="settings">Player 1 : <input id="p1_color" class="setting_color" type="color" value="#ff0000"></div>
+        <div class="settings"><input id="p1_color_hover" class="setting_color" type="color" value="#ffc2c2"></div>
+        <div class="settings">Player 2 : <input id="p2_color" class="setting_color" type="color" value="#0000ff"></div>
+        <div class="settings"><input id="p2_color_hover" class="setting_color" type="color" value="#12ffff"></div>
+        <div class="settings">기본 시간 : <input id="time_limit" class="setting_number" type="number" min="0" size="4" value="120"></div>
+        <div class="settings">초읽기 : <input id="time_limit_cho" class="setting_number" type="number" min="1" size="4" value="8"></div>
       </div>
 
     </div>
@@ -72,8 +72,7 @@ Kim Ji Woo
 Copyright © Juntae Jeong, 2021
 </pre>
     </div>
-    <br><br><br>
-    <br>
-    Copyright © Juntae Jeong, 2021
+
+    <span id="copyright">Copyright © Juntae Jeong, 2021</span>
   </body>
 </html>

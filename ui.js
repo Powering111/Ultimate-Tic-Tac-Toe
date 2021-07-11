@@ -1,3 +1,6 @@
+window.onbeforeunload = function() {
+  return false;
+};
 var help=false,credit=false;
 function toggleHelp(){
   if(help){
@@ -6,6 +9,8 @@ function toggleHelp(){
   }else{
     document.getElementById("help_container").style.display="block";
     help=true;
+    document.getElementById("credit_container").style.display="none";
+    credit=false;
   }
 }
 function toggleCredit(){
@@ -15,6 +20,8 @@ function toggleCredit(){
   }else{
     document.getElementById("credit_container").style.display="block";
     credit=true;
+    document.getElementById("help_container").style.display="none";
+    help=false;
   }
 }
 
