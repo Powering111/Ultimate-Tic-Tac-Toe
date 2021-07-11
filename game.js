@@ -149,24 +149,27 @@ function startGame(){
     active:9,
     mouseX:0,mouseY:0,
     color_bg:"#f3e6fc",
-    color:"white",
+    color:"#ffffff",
     color_hover:"#ffc2c2",
-    color_p1:"red",
-    color_p2:"blue",
+    color_p1:"#ff0000",
+    color_p1_hover:"#ffc2c2",
+    color_p2:"#0000ff",
+    color_p2_hover:"#12ffff",
     color_disabled:"#333333",
     color_draw:"#8a5a94",
-    max_time:60,
+    max_time:120,
     time_p1:0,
     time_p2:0,
-    max_time_after_finished:10,
+    max_time_after_finished:8,
     time_after_finished:10,
     time_started:0
   };
+  loadSettings();
   gameState.time_p1=gameState.time_p2=gameState.max_time;
   gameState.time_started=last_frame=new Date().getTime();
   //gameState.canvas = document.getElementById("game");
   //gameState.context = gameState.canvas.getContext("2d");
-  document.getElementById("btn_gameStart").style.display="none";
+  document.getElementById("gameStart").style.display="none";
 
   gameState.canvas=gameArea.canvas;
   gameArea.start();
@@ -185,6 +188,14 @@ function startGame(){
   document.getElementsByClassName("time")[1].style.display="block";
 
 }
+function loadSettings(){
+  gameState.color_p1=document.getElementById("p1_color").value;
+  gameState.color_p1_hover=document.getElementById("p1_color_hover").value;
+  gameState.color_p2=document.getElementById("p2_color").value;
+  gameState.color_p2_hover=document.getElementById("p2_color_hover").value;
+  gameState.max_time=document.getElementById("time_limit").value;
+}
+
 function update(){
   gameState.context.clearRect(0,0,gameState.canvas.width,gameState.canvas.height);
   gameState.context.fillStyle=gameState.color_bg;
@@ -197,7 +208,6 @@ function update(){
   }
   updateTime();
   updateDisplay();
-  document.getElementById("debug").innerHTML=gameState.active;
 
 }
 function updateTime(){
@@ -211,7 +221,7 @@ function updateTime(){
         gameState.time_after_finished--;
         if(gameState.time_after_finished<=0){
           change_player();
-
+          setpossibleEvery();
         }
       }else{
         gameState.time_p1--;
@@ -222,7 +232,7 @@ function updateTime(){
         gameState.time_after_finished--;
         if(gameState.time_after_finished<=0){
           change_player();
-
+          setpossibleEvery();
         }
       }else{
         gameState.time_p2--;
@@ -295,14 +305,14 @@ function checkUltimateMatch(x,y){
 function UltimateWin(winner){
   gameState.game=false;
   clearInterval(interval);
-  setTimeout(function(){alert("Player "+winner+" 승리!");},500);
-  update();
+  setTimeout(function(){alert("Player "+winner+" 승리!");update();},500);
+
 }
 function UltimateDraw(){
   gameState.game=false;
   clearInterval(interval);
-  setTimeout(function(){alert("무승부");},500);
-  update();
+  setTimeout(function(){alert("무승부");update();},500);
+
 }
 function decreaseActive(){
   gameState.active--;
@@ -311,12 +321,18 @@ function decreaseActive(){
   }
 }
 function setpossiblegrid(x,y){
-  if(gameState.grid[x][y].active!=0){
+  if(gameState.grid[x][y].active>0){
     gameState.possiblegrid={x:x,y:y};
   }else{
     gameState.possiblegrid=0;
   }
-
+  changePossibility();
+}
+function setpossibleEvery(){
+  gameState.possiblegrid=0;
+  changePossibility();
+}
+function changePossibility(){
   for(let i=0;i<3;i++){
     for(let j=0;j<3;j++){
       if(gameState.possiblegrid!=0&&(gameState.possiblegrid.x!=i || gameState.possiblegrid.y!=j))
@@ -330,11 +346,11 @@ function setpossiblegrid(x,y){
 function change_player(){
   if(gameState.player==1){
     gameState.player=2;
-    gameState.color_hover="#12FFFF";
+    gameState.color_hover=gameState.color_p2_hover;
     document.getElementById("player").innerHTML="Player 2";
   }else if(gameState.player==2){
     gameState.player=1;
-    gameState.color_hover="#ffc2c2";
+    gameState.color_hover=gameState.color_p1_hover;
     document.getElementById("player").innerHTML="Player 1";
   }
   accumulatedMs=0;

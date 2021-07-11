@@ -13,9 +13,19 @@
     <h2 id="player" class="time">Player 1</h2>
     <h2 id="player_c" class="time"></h2>
     <br>
-    <a id="btn_gameStart" onclick="startGame()">게임 시작</a>
+    <div id="gameStart">
+      <a id="btn_gameStart" onclick="startGame()">게임 시작</a>
+      <img src="logo.png" alt="Tic-Tac-Toe">
+      <div id="setting">
+        <div class="settings">Player 1 : <input id="p1_color" type="color" value="#ff0000"></div>
+        <div class="settings">Player 1(hover) : <input id="p1_color_hover" type="color" value="#ffc2c2"></div>
+        <div class="settings">Player 2 : <input id="p2_color" type="color" value="#0000ff"></div>
+        <div class="settings">Player 2(hover) : <input id="p2_color_hover" type="color" value="#12ffff"></div>
+        <div class="settings">Time Limit : <input id="time_limit" type="number" size="4" width="1" value="120"></div>
+      </div>
+
+    </div>
     <br id="belowGameArea">
-    <p id="debug">debug</p>
     <br>
     <a id="help_label" onclick="toggleHelp()">플레이 방법</a>
     <div id="help_container" onmousedown="mouse_down_all()">
