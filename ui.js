@@ -1,7 +1,18 @@
-window.onbeforeunload = function() {
-  return false;
-};
+
 var help=false,credit=false;
+
+function time_check_changed(){
+  let checked=document.getElementById("time_check").checked;
+  if(checked){
+    document.getElementsByClassName("time_limit")[0].style.visibility="visible";
+    document.getElementsByClassName("time_limit")[1].style.visibility="visible";
+  }
+  else{
+    document.getElementsByClassName("time_limit")[0].style.visibility="hidden";
+    document.getElementsByClassName("time_limit")[1].style.visibility="hidden";
+  }
+}
+
 function toggleHelp(){
   if(help){
     document.getElementById("help_container").style.display="none";

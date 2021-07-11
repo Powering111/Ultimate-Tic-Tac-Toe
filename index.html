@@ -8,7 +8,7 @@
     <link rel="stylesheet" type="text/css" href="style.css">
     <link rel="shortcut icon" href="icon.ico">
   </head>
-  <body>
+  <body onkeydown="keydown(event)">
     <h1>궁극의 틱택토</h1>
 
     <h2 id="player" class="time">Player 1</h2>
@@ -22,8 +22,9 @@
         <div class="settings"><input id="p1_color_hover" class="setting_color" type="color" value="#ffc2c2"></div>
         <div class="settings">Player 2 : <input id="p2_color" class="setting_color" type="color" value="#0000ff"></div>
         <div class="settings"><input id="p2_color_hover" class="setting_color" type="color" value="#12ffff"></div>
-        <div class="settings">기본 시간 : <input id="time_limit" class="setting_number" type="number" min="0" size="4" value="120"></div>
-        <div class="settings">초읽기 : <input id="time_limit_cho" class="setting_number" type="number" min="1" size="4" value="8"></div>
+        <div class="settings">시간 제한<input id="time_check" type="checkbox" onchange="time_check_changed()" checked></div>
+        <div class="settings time_limit">기본 시간 : <input id="time_limit" class="setting_number" type="number" min="0" size="4" value="120"></div>
+        <div class="settings time_limit">초읽기 : <input id="time_limit_cho" class="setting_number" type="number" min="1" size="4" value="8"></div>
       </div>
 
     </div>

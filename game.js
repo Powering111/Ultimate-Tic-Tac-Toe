@@ -1,6 +1,7 @@
 var gameState,interval;
 var accumulatedMs=0,last_frame;
 var timer1,timer2;
+const numbers=["1","2","3","4","5","6","7","8","9"];
 function component(parent,x,y,left,top,width,height){
   this.parent=parent;
   this.x=x;
@@ -35,7 +36,12 @@ function component(parent,x,y,left,top,width,height){
     gameState.context.fillRect(this.left,this.top,this.width,this.height);
   }
   this.click=function(){
-    if(this.state==0 && this.mouseHovered()){
+    if(this.mouseHovered()){
+      this.paint();
+    }
+  }
+  this.paint=function(){
+    if(this.state==0){
       this.state=gameState.player;
       this.parent.checkMatch(this.x,this.y);
       this.parent.decreaseActive();
@@ -125,15 +131,17 @@ var gameArea = {
     this.canvas.id="game";
     this.canvas.width = 550;
     this.canvas.height = 550;
-    this.canvas.addEventListener("click",function(){clicked(window.event);});
+    this.canvas.addEventListener("click",function(){clicked(event);});
     this.canvas.addEventListener("mousemove",function(){mouseMoved(event);});
-    //this.onclick="clicked(window.event)";
-    //this.canvas.onmousemove="mouseMoved(event)";
     gameState.context = this.canvas.getContext("2d");
     document.body.insertBefore(this.canvas, document.getElementById("belowGameArea"));
+
   }
 }
 function startGame(){
+  window.onbeforeunload = function() {
+    return false;
+  };
   gameState={
     game:true,
     paused:true,
@@ -159,6 +167,7 @@ function startGame(){
     color_p2_cho:"#05008a",
     color_disabled:"#333333",
     color_draw:"#8a5a94",
+    time_limit:true,
     max_time:120,
     time_p1:0,
     time_p2:0,
@@ -195,8 +204,11 @@ function loadSettings(){
   gameState.color_p1_hover=document.getElementById("p1_color_hover").value;
   gameState.color_p2=document.getElementById("p2_color").value;
   gameState.color_p2_hover=document.getElementById("p2_color_hover").value;
-  gameState.max_time=document.getElementById("time_limit").value;
-  gameState.max_time_after_finished=document.getElementById("time_limit_cho").value;
+  gameState.time_limit=document.getElementById("time_check").checked;
+  if(gameState.time_limit){
+    gameState.max_time=document.getElementById("time_limit").value;
+    gameState.max_time_after_finished=document.getElementById("time_limit_cho").value;
+  }
   gameState.color_hover=gameState.color_p1_hover;
 }
 
@@ -216,7 +228,7 @@ function update(){
 }
 function updateTime(){
   let now_frame = new Date().getTime();
-  if(!gameState.paused)
+  if(!gameState.paused && gameState.time_limit)
     accumulatedMs+=now_frame - last_frame;
   last_frame=now_frame;
   if(accumulatedMs>=1000){
@@ -369,4 +381,14 @@ function mouseMoved(e){
 function clicked(e){
   gameState.paused=false;
   gameState.now_hovered.click();
+}
+function keydown(e){
+  if(gameState!=null&&!gameState.paused && gameState.possiblegrid!=0){
+    if(numbers.includes(e.key)){
+    let num=parseInt(e.key)-1;
+    let x=2-parseInt(num/3);
+    let y=num%3;
+    gameState.grid[gameState.possiblegrid.x][gameState.possiblegrid.y].can[y][x].paint();
+  }
+  }
 }
