@@ -85,3 +85,23 @@ function displayTimerBg(time,maxtime,to,color1,color2){
   let percent=(time/maxtime)*100;
   to.style.background="linear-gradient(to right, "+color1+" "+(percent-3)+"%,"+color2+" "+(percent)+"%)";
 }
+function displayFinish(result){
+  let elem=document.getElementById("gameFinished");
+
+  if(result==1){
+    elem.innerHTML="Player 1 승리!";
+    elem.style.background_color=gameState.color_p1;
+    gameState.color_bg=gameState.color_p1_hover;
+  }else if(result==2){
+    elem.innerHTML="Player 2 승리!";
+    elem.style.background_color=gameState.color_p2;
+    gameState.color_bg=gameState.color_p2_hover;
+
+  }
+  document.querySelector("body").style.backgroundColor=gameState.color_bg;
+  elem.style.display="block";
+}
+function hideFinish(){
+  document.getElementById("gameFinished").style.display="none";
+  timer1.innerHTML="Player "+gameState.winner+" 승리!";
+}

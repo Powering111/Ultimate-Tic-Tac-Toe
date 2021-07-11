@@ -74,6 +74,7 @@ body{
   text-align:left;
 }
 #help_label{
+  font-size:20px;
   display:block;
   user-select: none;
   width:140px;
@@ -98,7 +99,9 @@ body{
   z-index:9999;
   user-select: none;
 }
+
 #credit_label{
+  font-size:20px;
   display:block;
   user-select: none;
   width:140px;
@@ -124,6 +127,18 @@ body{
   transform:translate(-50%,-50%);
   z-index:9999;
   user-select: none;
+}
+#gameFinished{
+  color:white;
+  font:50px bold;
+  width:100%;
+  display:none;
+  background-color:purple;
+  padding:20px;
+  position:fixed;
+  top:30%;
+  left:0px;
+
 }
 .time{
   display:none;

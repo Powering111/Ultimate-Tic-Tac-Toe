@@ -145,6 +145,7 @@ function startGame(){
   gameState={
     game:true,
     paused:true,
+    winner:0,
     canvas:null,
     context:null,
     player:1,
@@ -227,6 +228,7 @@ function update(){
 
 }
 function updateTime(){
+  if(!gameState.game)return;
   let now_frame = new Date().getTime();
   if(!gameState.paused && gameState.time_limit)
     accumulatedMs+=now_frame - last_frame;
@@ -319,16 +321,22 @@ function checkUltimateMatch(x,y){
   }
 }
 function UltimateWin(winner){
+  gameState.winner=winner;
   gameState.game=false;
   clearInterval(interval);
-  setTimeout(function(){alert("Player "+winner+" 승리!");setpossibleEvery();update();},500);
+
+  displayFinish(winner);
+  setpossibleEvery();
+  change_player();
+  update();
 
 }
 function UltimateDraw(){
   gameState.game=false;
   clearInterval(interval);
-  setTimeout(function(){alert("무승부");setpossibleEvery();update();},500);
-
+  displayFinish(0);
+  setpossibleEvery();
+  update();
 }
 function decreaseActive(){
   gameState.active--;
@@ -374,16 +382,19 @@ function change_player(){
 }
 
 function mouseMoved(e){
+  if(!gameState.game)return;
   let cRect= gameState.canvas.getBoundingClientRect();
   gameState.mouseX=Math.round(e.clientX-cRect.left);
   gameState.mouseY=Math.round(e.clientY-cRect.top);
 }
 function clicked(e){
+  if(!gameState.game)return;
   gameState.paused=false;
   gameState.now_hovered.click();
 }
 function keydown(e){
-  if(gameState!=null&&!gameState.paused && gameState.possiblegrid!=0){
+
+  if(gameState!=null&&!gameState.paused&& gameState.possiblegrid!=0){
     if(numbers.includes(e.key)){
     let num=parseInt(e.key)-1;
     let x=2-parseInt(num/3);
